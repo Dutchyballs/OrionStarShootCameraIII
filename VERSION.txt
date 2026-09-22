@@ -1,0 +1,9 @@
+Orion StarShoot 3 — 1.2.0-beta.1
+
+Public source beta, 2026-09-22.
+Windows/WSL panel and native Linux/Raspberry Pi INDIGO adapter.
+
+Windows previews, resizing and PNG/AVI captures verified on the existing kernel.
+Fresh kernel build and isolated VM boot verified; new-image WSL camera testing remains outstanding.
+Native INDIGO hardware verification: INDIGO 3.0-7 on Raspberry Pi, 2026-09-22.
+See CHANGELOG.md and docs/PROJECT_STATUS.md for evidence and compatibility limits.

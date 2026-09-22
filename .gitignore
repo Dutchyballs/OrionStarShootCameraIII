@@ -1,0 +1,47 @@
+# User captures can be hundreds of megabytes.
+captures/*
+!captures/.gitkeep
+
+# Local safety backups remain on disk but Git history replaces the need to track them.
+backup-before-*/
+
+# Runtime and diagnostic output.
+*.log
+*.failed
+*.complete
+*.raw
+*.avi
+*.png
+preview-last.*
+
+# Downloaded legacy research packages and extracted vendor software.
+research/
+downloads/
+*.zip
+
+# Local editor and operating-system files.
+.vs/
+.vscode/
+Thumbs.db
+Desktop.ini
+
+# Build products; this project publishes source, not custom Linux kernels.
+/bzImage
+/vmlinux
+/modules.vhdx
+*.so
+*.o
+*.deb
+*.rpm
+*.pkg.tar.*
+*.tar.gz
+*.tgz
+*.fits
+*.fit
+*.ser
+.env
+.env.*
+*.pem
+*.key
+__pycache__/
+/staging/

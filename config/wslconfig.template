@@ -1,0 +1,7 @@
+[wsl2]
+# Replace this example with the absolute Windows path to your built bzImage.
+# Keep the doubled backslashes. WSL does not expand environment variables here.
+kernel=C:\\path\\to\\OrionStarShootCameraIII\\bzImage
+# If camera drivers are modules, build and supply the modules VHDX from the
+# exact same source revision and configuration as bzImage, then uncomment:
+# kernelModules=C:\\path\\to\\OrionStarShootCameraIII\\modules.vhdx

@@ -1,0 +1,32 @@
+name: Bug report
+description: Report a reproducible camera or setup problem.
+body:
+  - type: dropdown
+    id: platform
+    attributes:
+      label: Camera path
+      options:
+        - Windows / WSL / Planetary Deck
+        - Linux / Raspberry Pi / INDIGO
+        - Setup or documentation
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Hardware and versions
+      description: Include USB VID:PID, OS/kernel, WSL distro when applicable, and project/INDIGO versions. Remove personal paths and serial numbers.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Steps, expected result and actual result
+      description: Include whether repeated preview, still capture or recording fails. Attach only redacted diagnostics.
+    validations:
+      required: true
+  - type: textarea
+    id: validation
+    attributes:
+      label: Checks already tried
+      description: List relevant self-tests and whether another application has the camera open.
