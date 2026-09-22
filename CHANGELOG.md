@@ -4,7 +4,7 @@
 
 - Document Windows/WSL and Raspberry Pi/INDIGO as separate supported paths.
 - Add the hardware-tested native INDIGO adapter and a standalone Makefile.
-- Add MIT licensing, dependency notices, contribution/security guidance and a GitHub Actions workflow template.
+- Add MIT licensing, dependency notices, contribution/security guidance and active GitHub Actions source checks.
 - Replace personal installation assumptions with portable configuration.
 - Tighten camera identity, process cleanup and recording error reporting.
 - Exclude WSL kernel binaries; recover the exact upstream source, configuration, build commands and matching module identity.

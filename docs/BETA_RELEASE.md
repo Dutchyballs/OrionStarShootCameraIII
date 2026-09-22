@@ -35,7 +35,7 @@ Use [Windows setup](WINDOWS_SETUP.md) or [native INDIGO setup](../indigo/README.
 
 For a panel rollback, close the beta's preview and recording, then launch the saved working program folder. Do not roll back by deleting captures or replacing kernels. Any kernel experiment needs its own backup and activation/rollback plan because WSL2 shares its kernel across distributions.
 
-Use the published v1.2.0-beta.1 source ZIP and its SHA-256 checksum for a fixed copy. The release tag identifies this beta; future development belongs in reviewed changes after it. The public repository starts from clean history and does not include the original private installation history.
+Use the published v1.2.0-beta.1 source ZIP and its SHA-256 checksum for a fixed copy. The release tag identifies this beta; future development belongs in pull requests with passing Windows and Linux source checks. Public `main` rejects force pushes and deletion, and requires those checks. The public repository starts from clean history and does not include the original private installation history.
 
 ## Feedback and security
 

@@ -1,6 +1,6 @@
 # Testing
 
-Run checks from the repository root. The [GitHub workflow template](../.github/workflow-templates/README.md) is inactive until installed by an authorised owner. When enabled, it performs hardware-free source checks; it does not attach USB, launch a camera preview, slew a mount or claim telescope validation.
+Run checks from the repository root. The active [GitHub workflow](../.github/workflows/checks.yml) runs Windows panel contracts, Linux safety checks, documentation checks and the native adapter build on pushes and pull requests. It does not attach USB, launch a camera preview, slew a mount or claim telescope validation. View execution results under the repository's Actions tab.
 
 ## PowerShell checks
 
@@ -13,7 +13,7 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\tests\run-self-tests.p
 
 The first parses every PowerShell file. The second parses the panel and runs its four contract checks for preview startup, bridge lifetime, attachment retry and sensor readiness. They invoke the panel in SelfTest mode, constructing Windows Forms controls without showing the normal interface or opening the camera. The panel also checks wrapped text and control bounds at its minimum size, a larger size and the restored size (`LAYOUT=OK`). These checks do not prove that a camera preview renders or replace inspection at the user's display scaling.
 
-PowerShell 7 (`pwsh`) on Linux can run the syntax parser. The panel self-test and its contract wrappers require Windows PowerShell and Windows Forms; run them on Windows or the Windows CI runner after enabling the workflow.
+PowerShell 7 (`pwsh`) on Linux can run the syntax parser. The panel self-test and its contract wrappers require Windows PowerShell and Windows Forms; run them on Windows or the Windows CI runner.
 
 ## Linux checks without hardware
 

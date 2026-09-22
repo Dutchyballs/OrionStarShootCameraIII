@@ -2,6 +2,8 @@
 
 **Public beta · v1.2.0-beta.1 · source-only**
 
+[Download the beta](https://github.com/Dutchyballs/OrionStarShootCameraIII/releases/tag/v1.2.0-beta.1) · [Source checks](https://github.com/Dutchyballs/OrionStarShootCameraIII/actions/workflows/checks.yml)
+
 Start with the setup guide for your platform. This beta includes source and build instructions, with no prebuilt camera installer or custom kernel. Read the [beta release notes](docs/BETA_RELEASE.md) for verified features, known limits and recovery guidance.
 
 
@@ -55,7 +57,7 @@ Captures, private configuration, logs, downloaded installers and kernel binaries
 
 ## Contributing and support
 
-An optional [GitHub Actions workflow](.github/workflow-templates/README.md) is included as an inactive template; enable it to run the hardware-free checks on each change.
+The active [GitHub Actions workflow](.github/workflows/checks.yml) runs Windows and Linux source checks on each change. Hardware checks remain separate.
 
 Use the [contribution guide](CONTRIBUTING.md) for code changes and the issue templates for reproducible bug reports. Include the USB ID, platform, kernel, application version and exact failing step; remove personal paths and credentials from logs first. Please report security-sensitive findings privately using [SECURITY.md](SECURITY.md).
 
