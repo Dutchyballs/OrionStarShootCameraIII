@@ -921,13 +921,27 @@ if ($SelfTest) {
         throw 'One or more required Planetary Deck controls were not created.'
     }
     $quickProcess = Start-Process -FilePath powershell.exe -ArgumentList @('-NoProfile', '-Command', 'exit 0') -WindowStyle Hidden -PassThru
-    $quickRejected = -not (Test-ProcessStayedAlive -Process $quickProcess -MinimumMilliseconds 300)
-    try { $quickProcess.Dispose() } catch { }
+    try {
+        # Process startup can exceed the guard interval on a busy CI runner.
+        # Establish an exited process before testing the rejection path.
+        if (-not $quickProcess.WaitForExit(10000)) {
+            throw 'The self-test exit process did not finish within 10 seconds.'
+        }
+        $quickRejected = -not (Test-ProcessStayedAlive -Process $quickProcess -MinimumMilliseconds 300)
+    }
+    finally {
+        if (-not $quickProcess.HasExited) { $quickProcess.Kill(); $quickProcess.WaitForExit(3000) | Out-Null }
+        $quickProcess.Dispose()
+    }
 
-    $steadyProcess = Start-Process -FilePath powershell.exe -ArgumentList @('-NoProfile', '-Command', 'Start-Sleep -Seconds 2') -WindowStyle Hidden -PassThru
-    $steadyAccepted = Test-ProcessStayedAlive -Process $steadyProcess -MinimumMilliseconds 300
-    if (-not $steadyProcess.HasExited) { Stop-Process -Id $steadyProcess.Id -Force -ErrorAction SilentlyContinue }
-    try { $steadyProcess.Dispose() } catch { }
+    $steadyProcess = Start-Process -FilePath powershell.exe -ArgumentList @('-NoProfile', '-Command', 'Start-Sleep -Seconds 30') -WindowStyle Hidden -PassThru
+    try {
+        $steadyAccepted = Test-ProcessStayedAlive -Process $steadyProcess -MinimumMilliseconds 300
+    }
+    finally {
+        if (-not $steadyProcess.HasExited) { $steadyProcess.Kill(); $steadyProcess.WaitForExit(3000) | Out-Null }
+        $steadyProcess.Dispose()
+    }
 
     if (-not $quickRejected -or -not $steadyAccepted) {
         throw 'Preview startup guard did not distinguish a failed process from a running process.'

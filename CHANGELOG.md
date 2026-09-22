@@ -12,6 +12,7 @@
 - Fix clipped Windows panel text, allow resizing and add layout checks.
 - Record owner-confirmed live previews/resizing, passing PNG/AVI checks, and a fresh kernel build with isolated driver boot.
 - Preserve kernel configuration LF line endings on Windows; document the remaining fresh-image WSL camera test.
+- Make the self-test process checks independent of PowerShell startup speed on CI runners.
 - Distinguish historical hardware results from current source-only checks.
 
 

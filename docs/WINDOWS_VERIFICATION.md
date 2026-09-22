@@ -9,7 +9,7 @@ Two supplied Windows laptop handovers establish the results below. Linux integra
 | WSL launch and provenance recovery | `1333f97656189ef412d069901a9d433408fae555` | `e50a0f0aa9b0f2d6dbd80d81fda9482127f20333` |
 | Layout, visual confirmation and fresh kernel | `2346425aadbb11ab83097125bc19abdf5fc3f0c0` | `4be2700a8567c94ecb72f85693c83628173a4512` |
 
-Both patches are integrated into this branch. The stack was WSL 2.7.13.0, Ubuntu-24.04, WSLg, kernel `6.18.35.2-microsoft-standard-WSL2+`, Orion USB `0e96:c001`, `gspca_ov519`, `/dev/video0`. The laptop's normal display scaling was 250%.
+Both patches are integrated into this branch. Public-release CI subsequently exposed a timing assumption in the `-SelfTest` block: starting PowerShell can take longer than 300 milliseconds. That block now waits for the exit test process to terminate, uses a longer-lived positive test process and cleans both up in `finally`. The live camera code is unchanged; the corrected self-test is checked on GitHub Windows runners. The stack was WSL 2.7.13.0, Ubuntu-24.04, WSLg, kernel `6.18.35.2-microsoft-standard-WSL2+`, Orion USB `0e96:c001`, `gspca_ov519`, `/dev/video0`. The laptop's normal display scaling was 250%.
 
 Archive SHA-256 values:
 
