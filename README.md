@@ -4,8 +4,8 @@
 hardware-free simulator are now available. Physical capture still requires
 measured sensor exposure timing; compatibility is not yet hardware-verified.
 See the [N.I.N.A. integration guide](docs/NINA_SETUP.md).
-The [18 October handover](docs/HANDOVER_2026-10-18.md) records the working
-camera checkpoint, validation and the remaining integration steps.
+The [current N.I.N.A. handover](docs/NINA_HANDOVER.md) records the focused
+camera, repairs, validation and the remaining integration steps.
 
 **Public beta · v1.2.0-beta.1 · source-only**
 
@@ -31,13 +31,16 @@ This community project provides a Windows control panel through WSL 2 and a nati
 | Exposure control | Automatic or raw manual values 0–255 | Automatic or raw manual values 0–255 |
 | Main prerequisite | WSL kernel **and matching modules** with ov519 support | An ov519-capable Linux kernel and INDIGO 3 development files |
 
-**Status:** A fresh WSL installation and kernel were camera-tested on 18 October 2026. The [OVFX2 frame-rate fix](kernel/wsl/OVFX2_FRAME_RATE.md) restored complete full-resolution frames; PNG/AVI capture and two preview starts passed. The images were dark bench captures, so scene detail and focus remain unverified. Windows panel resizing and the Pi adapter have their earlier September results. See the [verification record](docs/PROJECT_STATUS.md) for the limits.
+**Status:** A fresh WSL installation and kernel were camera-tested on 18 October 2026. The [OVFX2 frame-rate fix](kernel/wsl/OVFX2_FRAME_RATE.md) restored complete full-resolution frames; PNG/AVI capture and repeated previews passed. After the WSLg display repair, the owner confirmed a visible, focused preview. Windows panel resizing and the Pi adapter have their earlier September results. See the [verification record](docs/PROJECT_STATUS.md) for the limits.
 
 ## Start here
 
 ### Windows
 
 Follow the [Windows setup guide](docs/WINDOWS_SETUP.md) to install WSL, usbipd-win and the Linux capture tools, and provide a compatible kernel/module installation. Then run **Launch Orion StarShoot.cmd**, connect the camera and open **Live Preview**.
+
+For desktop launch/restart shortcuts and invisible-window recovery, see
+[preview recovery](docs/PREVIEW_RECOVERY.md).
 
 The original WSL kernel's [pinned source, recovered configuration and build recipe](kernel/wsl/README.md) are included. A custom kernel binary is **not distributed** in this source tree. An existing installation can keep its local `bzImage`; do not replace a working kernel just to update the panel.
 

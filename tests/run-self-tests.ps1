@@ -21,7 +21,8 @@ $contractTests = @(
     'test-preview-startup-guard.ps1',
     'test-bridge-keepalive-contract.ps1',
     'test-attach-retry-contract.ps1',
-    'test-sensor-readiness-contract.ps1'
+    'test-sensor-readiness-contract.ps1',
+    'test-preview-display-recovery.ps1'
 )
 
 foreach ($testName in $contractTests) {

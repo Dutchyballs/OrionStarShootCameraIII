@@ -121,6 +121,23 @@ set_manual_exposure() {
 }
 
 case "${1:-}" in
+  can-restart)
+    if tracked_pid "$RECORD_PID_FILE" ffmpeg >/dev/null; then
+      echo 'A recording is running. Stop it before restarting the camera.' >&2
+      exit 75
+    fi
+    ;;
+
+  display-state)
+    # Read the latest entry: Weston appends a new startup after a repair.
+    if [[ -r /mnt/wslg/weston.log ]]; then
+      DISPLAY_STATE=$(sed -n 's/.*RDP backend: use_gfxredir = \([01]\).*/\1/p' /mnt/wslg/weston.log | tail -1)
+      printf '%s\n' "${DISPLAY_STATE:-unavailable}"
+    else
+      echo unavailable
+    fi
+    ;;
+
   check)
     require_camera
     v4l2-ctl -d "$DEVICE" --get-fmt-video
@@ -272,7 +289,7 @@ case "${1:-}" in
     ;;
 
   *)
-    echo "Usage: $0 {check|controls|auto|exposure VALUE|preset NAME|preview [on|off]|stop-preview|recover|snapshot OUTPUT|record OUTPUT SECONDS|stop}" >&2
+    echo "Usage: $0 {can-restart|display-state|check|controls|auto|exposure VALUE|preset NAME|preview [on|off]|stop-preview|recover|snapshot OUTPUT|record OUTPUT SECONDS|stop}" >&2
     exit 64
     ;;
 esac

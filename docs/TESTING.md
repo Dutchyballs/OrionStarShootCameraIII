@@ -12,6 +12,11 @@ Run checks from the repository root. The active [GitHub workflow](../.github/wor
 
 ## PowerShell checks
 
+The syntax scan includes `.psm1` modules. The self-test runner also executes
+five mocked display-recovery scenarios: healthy, repaired, failed restart,
+persistent failure and unavailable WSLg. These do not restart the real display.
+The live preview test now also exercises Recover while a preview is running.
+
 On Windows:
 
 ```powershell

@@ -80,6 +80,20 @@ class CameraSafetyTests(unittest.TestCase):
         self.assertIn("Stopping recording safely", self.run_camera("stop").stdout)
         self.assertEqual(process.wait(timeout=5), 0)
 
+    def test_restart_refuses_tracked_recording_without_stopping_it(self):
+        self.run_camera('can-restart')
+        process = self.named_media_process('ffmpeg', '/dev/null')
+        (self.runtime / 'record.pid').write_text(str(process.pid))
+        self.assertIn('recording is running', self.run_camera('can-restart', expected=75).stderr)
+        self.assertIsNone(process.poll())
+
+    def test_restart_does_not_treat_other_device_as_its_recording(self):
+        self.run_camera('can-restart')
+        process = self.named_media_process('ffmpeg', '/dev/other-camera')
+        (self.runtime / 'record.pid').write_text(str(process.pid))
+        self.run_camera('can-restart')
+        self.assertIsNone(process.poll())
+
     def test_reused_media_pid_for_other_device_is_not_stopped(self):
         self.run_camera("stop")
         process = self.named_media_process("ffmpeg", "/dev/other-camera")
