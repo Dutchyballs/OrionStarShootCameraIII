@@ -1,5 +1,12 @@
 # Orion StarShoot 3
 
+**N.I.N.A. work in progress:** an experimental ASCOM Alpaca adapter and
+hardware-free simulator are now available. Physical capture still requires
+measured sensor exposure timing; compatibility is not yet hardware-verified.
+See the [N.I.N.A. integration guide](docs/NINA_SETUP.md).
+The [18 October handover](docs/HANDOVER_2026-10-18.md) records the working
+camera checkpoint, validation and the remaining integration steps.
+
 **Public beta · v1.2.0-beta.1 · source-only**
 
 [Download the beta](https://github.com/Dutchyballs/OrionStarShootCameraIII/releases/tag/v1.2.0-beta.1) · [Source checks](https://github.com/Dutchyballs/OrionStarShootCameraIII/actions/workflows/checks.yml)
@@ -24,7 +31,7 @@ This community project provides a Windows control panel through WSL 2 and a nati
 | Exposure control | Automatic or raw manual values 0–255 | Automatic or raw manual values 0–255 |
 | Main prerequisite | WSL kernel **and matching modules** with ov519 support | An ov519-capable Linux kernel and INDIGO 3 development files |
 
-**Status:** Windows live previews and panel resizing were confirmed by the owner on 22 September 2026; automated lifecycle and PNG/AVI checks passed. A fresh kernel build and isolated VM boot also passed, but those new binaries have not been camera-tested under WSL. The Pi adapter was hardware-tested the same day with INDIGO 3.0-7. Telescope focus remains unverified. See the [verification record](docs/PROJECT_STATUS.md) for the limits.
+**Status:** A fresh WSL installation and kernel were camera-tested on 18 October 2026. The [OVFX2 frame-rate fix](kernel/wsl/OVFX2_FRAME_RATE.md) restored complete full-resolution frames; PNG/AVI capture and two preview starts passed. The images were dark bench captures, so scene detail and focus remain unverified. Windows panel resizing and the Pi adapter have their earlier September results. See the [verification record](docs/PROJECT_STATUS.md) for the limits.
 
 ## Start here
 

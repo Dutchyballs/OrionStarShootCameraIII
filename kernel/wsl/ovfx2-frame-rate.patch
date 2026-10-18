@@ -1,0 +1,14 @@
+diff --git a/drivers/media/usb/gspca/ov519.c b/drivers/media/usb/gspca/ov519.c
+index bffa94e76..f3c4b98ff 100644
+--- a/drivers/media/usb/gspca/ov519.c
++++ b/drivers/media/usb/gspca/ov519.c
+@@ -3253,6 +3253,9 @@ static int sd_config(struct gspca_dev *gspca_dev,
+ 	}
+ 
+ 	sd->frame_rate = 15;
++	/* OVFX2 mode setup also uses sd->frame_rate. */
++	if (sd->bridge == BRIDGE_OVFX2 && frame_rate > 0)
++		sd->frame_rate = frame_rate;
+ 
+ 	return 0;
+ }

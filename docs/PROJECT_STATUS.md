@@ -2,6 +2,48 @@
 
 This separates recorded hardware results from the source-cleanup checks. Nothing here establishes telescope focus or astronomical image quality.
 
+## Windows / WSL: fresh setup, 18 October 2026
+
+Ubuntu 24.04.5 was installed under WSL 2.7.13 on Windows 11 x64, with
+usbipd-win 5.3.0. A fresh kernel and full matching module tree were built from
+the recorded source/configuration and activated as
+`6.18.35.2-microsoft-standard-WSL2-orion-nina1`. The camera identified as
+`0e96:c001`, and the driver detected OV9600.
+
+The unmodified module produced short SXGA frames, including after startup
+frames were skipped. VGA frames were complete. The [OVFX2 frame-rate patch](../kernel/wsl/OVFX2_FRAME_RATE.md)
+made the module setting apply to this bridge. Its replacement module compiled
+with warnings treated as errors. With `frame_rate=10` selecting the discrete
+7.5 fps SXGA mode, ten saved frames were all exactly 1,310,720 bytes. After a
+driver reload from persistent config, five more frames were complete. VGA
+remained approximately 15 fps.
+
+The original snapshot/record commands then produced two different 1280 x 1024
+RGB PNGs and a three-second 640 x 480 BGR AVI with 45 frames. All saved media
+decoded, and pixel data varied. The images were dark bench captures; these
+checks do not establish scene detail or focus. Manual exposure register 50
+read back correctly and prior automatic controls were restored. The Windows
+live regression passed two preview start/stop cycles and the idle Attached
+bridge check both before and after the module change. Visible scene response
+has not been confirmed in these automated checks.
+
+During WSL restarts the camera temporarily became a Windows descriptor-error
+device. Unplugging only the camera, waiting and reconnecting restored its USB
+identity. No unrelated USB device was shared or rebound.
+
+N.I.N.A.'s installed ASCOM.Alpaca library retrieved simulator frames through
+the new WSL kernel and passed abort, reconnect and immediate restart checks.
+This is a client-library test, not a physical N.I.N.A. GUI capture. The
+physical Alpaca adapter remains gated on measured integration timing; see
+[N.I.N.A. setup](NINA_SETUP.md).
+
+A later check with the cap off and the camera fitted to optics found no clear
+brightness response across manual raw values 0, 50, 127 and 255, despite V4L2
+readback. Illumination was not controlled, and this is not an exposure
+calibration or a sensor-failure diagnosis. Jason will focus with the panel;
+scene response remains unverified. The [checkpoint handover](HANDOVER_2026-10-18.md)
+records the evidence, limits and exact next steps for N.I.N.A.
+
 ## Windows / WSL: historical baseline
 
 Recorded hardware verification: **15 July 2026**, Planetary Deck **1.1.3**, Ubuntu 24.04 under WSL 2, kernel `6.18.35.2-microsoft-standard-WSL2+`, camera USB `0e96:c001`.
@@ -43,7 +85,7 @@ Before a release, run the listed checks on the exact candidate and record the co
 
 ## Still to verify
 
-- Activation and camera capture under WSL with the newly built kernel and matching modules. Fresh compilation and isolated VM boot have passed.
+- Physical N.I.N.A. capture and measured integration timing. Standalone WSL camera capture passed on 18 October with the documented module patch and setting.
 - Distro names requiring quotes, if a supported WSL version permits them; WSL 2.7.13 rejects spaces.
 - Display configurations beyond the tested normal 250% scaling and resize workflow.
 - Telescope focus, target acquisition and image quality.
