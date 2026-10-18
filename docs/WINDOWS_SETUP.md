@@ -1,6 +1,6 @@
 # Windows / WSL setup
 
-This is an advanced setup for Windows with WSL 2 and WSLg. The recorded working environment used Ubuntu 24.04 and USB camera `0e96:c001`. A new Windows installation has not been validated during the September source cleanup.
+This is an advanced setup for Windows with WSL 2 and WSLg. Ubuntu 24.04 and USB camera `0e96:c001` were tested on a newly provisioned WSL installation on 18 October 2026; see the [verification record](PROJECT_STATUS.md).
 
 ## 1. Keep the project in a stable location
 
@@ -27,7 +27,9 @@ Use WSLg for the `ffplay` preview window. A remote/headless WSL session without 
 
 Follow [Driver and kernel notes](DRIVER_AND_KERNEL.md). The WSL kernel must support `gspca_ov519`, with matching modules if the driver is modular. This repository does not supply a prebuilt kernel or a matching module archive.
 
-The tested kernel was `6.18.35.2-microsoft-standard-WSL2+`. Its [exact source, configuration and build recipe](../kernel/wsl/README.md) were recovered from the working laptop. Matching modules were installed inside Ubuntu, with no `kernelModules` VHDX setting. The recipe passed a fresh build, module staging and isolated VM boot. Camera testing under WSL still used the original kernel; the new binaries have not been activated and camera-tested there. No prebuilt kernel is offered.
+The historical kernel was `6.18.35.2-microsoft-standard-WSL2+`. Its [exact source, configuration and build recipe](../kernel/wsl/README.md) were recovered from the working laptop. On 18 October, a fresh build with suffix `-orion-nina1` was activated and camera-tested. Matching modules were installed inside Ubuntu, with no `kernelModules` VHDX setting. No prebuilt kernel is offered.
+
+For the tested OV9600 sensor, use the [OVFX2 frame-rate fix](../kernel/wsl/OVFX2_FRAME_RATE.md). Without the patch, the module's frame-rate setting is ignored for this bridge, and the newly tested installation returned short full-resolution frames. The tested setting selects 7.5 fps at full resolution while retaining 15 fps VGA preview. Install both the patched module and its documented module setting; an unpatched module with the setting alone does not fix it.
 
 Back up `%USERPROFILE%\.wslconfig`, merge the relevant settings from `config/wslconfig.template`, and replace the example paths with your own. Keep any unrelated settings. Apply kernel changes with `wsl --shutdown` only after saving work in all WSL distributions; it stops all of them.
 

@@ -1,5 +1,10 @@
 # Recovered WSL kernel build
 
+**18 October follow-up:** a fresh build was activated under WSL and tested
+with the camera. A separate [OVFX2 frame-rate patch and module setting](OVFX2_FRAME_RATE.md)
+were needed for complete full-resolution frames. The historical source-clean
+records below predate that change; see the [current verification record](../../docs/PROJECT_STATUS.md).
+
 Recovered on the Windows laptop on 22 September 2026 and supplied in its text-only handover. This is a source/configuration record, not a prebuilt kernel release. During Linux integration, GitHub confirmed the commit and tag, and the included configuration diff matched that exact upstream configuration byte-for-byte.
 
 ## Verified source and configuration

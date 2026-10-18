@@ -1,6 +1,6 @@
 # Dependencies and attribution
 
-The root MIT licence applies to original project scripts, documentation, tests and the native camera adapter. It does not relicense third-party software, derived kernel configuration or camera firmware. The recovered Linux configuration and its diff in `kernel/wsl/` retain Linux licensing; [GPLv2](licenses/GPL-2.0.txt) is included alongside their [source/build provenance](kernel/wsl/README.md).
+The root MIT licence applies to original project scripts, documentation, tests and the native camera adapter. It does not relicense third-party software, derived kernel configuration or camera firmware. The recovered Linux configuration, its diff and the OVFX2 driver patch in `kernel/wsl/` retain Linux licensing; [GPLv2](licenses/GPL-2.0.txt) is included alongside their [source/build provenance](kernel/wsl/README.md).
 
 | Component | Role | Upstream / licence information |
 |---|---|---|

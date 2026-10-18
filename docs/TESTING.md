@@ -1,5 +1,13 @@
 # Testing
 
+## Experimental N.I.N.A. / Alpaca bridge
+
+Run `python tests/test-alpaca.py` on Windows or Linux with Python 3.10 or later.
+It opens local HTTP/UDP sockets and tests the simulator, image orientation,
+JSON/ImageBytes, subframes, abort/reconnect and calibration refusal. No camera,
+USB changes or third-party Python packages are needed. See
+[N.I.N.A. setup and remaining hardware checks](NINA_SETUP.md).
+
 Run checks from the repository root. The active [GitHub workflow](../.github/workflows/checks.yml) runs Windows panel contracts, Linux safety checks, documentation checks and the native adapter build on pushes and pull requests. It does not attach USB, launch a camera preview, slew a mount or claim telescope validation. View execution results under the repository's Actions tab.
 
 ## PowerShell checks
