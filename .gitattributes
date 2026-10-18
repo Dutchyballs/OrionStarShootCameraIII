@@ -8,6 +8,7 @@
 *.yml text eol=lf
 *.yaml text eol=lf
 *.ps1 text eol=crlf
+*.psm1 text eol=crlf
 *.cmd text eol=crlf
 Makefile text eol=lf
 kernel/wsl/config text eol=lf

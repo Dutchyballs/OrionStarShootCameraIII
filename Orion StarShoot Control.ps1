@@ -9,6 +9,7 @@ Add-Type -AssemblyName System.Drawing
 [System.Windows.Forms.Application]::EnableVisualStyles()
 
 $script:AppDir = Split-Path -Parent $MyInvocation.MyCommand.Path
+Import-Module (Join-Path $script:AppDir 'tools\OrionPreviewRecovery.psm1') -Force
 $script:CaptureDir = Join-Path $script:AppDir 'captures'
 $usbipdCommand = Get-Command usbipd.exe -ErrorAction SilentlyContinue
 $script:Usbipd = if ($null -ne $usbipdCommand) { $usbipdCommand.Source } else { Join-Path $env:ProgramFiles 'usbipd-win\usbipd.exe' }
@@ -26,6 +27,7 @@ $script:RecordingEndsAt = $null
 $script:RecordingSeconds = 0
 $script:UpdatingExposureUi = $false
 $script:CameraConnected = $false
+$script:ConnectingCamera = $false
 $script:PreviewRetryLimit = 2
 $script:BridgeKeepAliveProcess = $null
 $script:AttachRetryLimit = 3
@@ -168,6 +170,8 @@ function Get-OrionUsbDevice {
         throw 'usbipd-win is not installed. Install it before connecting the camera.'
     }
     $lines = & $script:Usbipd list 2>&1
+    if ($LASTEXITCODE -ne 0) { throw 'Could not read the USB camera list.' }
+    $devices = @()
     foreach ($lineObject in $lines) {
         $line = [string]$lineObject
         if ($line -match '^\s*(\S+)\s+0e96:c001\s+') {
@@ -176,9 +180,11 @@ function Get-OrionUsbDevice {
             if ($line -match '\s+Not shared\s*$') { $state = 'Not shared' }
             elseif ($line -match '\s+Shared\s*$') { $state = 'Shared' }
             elseif ($line -match '\s+Attached\s*$') { $state = 'Attached' }
-            return [pscustomobject]@{ BusId = $busId; State = $state; Line = $line }
+            $devices += [pscustomobject]@{ BusId = $busId; State = $state; Line = $line }
         }
     }
+    if ($devices.Count -gt 1) { throw 'More than one matching Orion camera is connected. Connect only the camera you want to use.' }
+    if ($devices.Count -eq 1) { return $devices[0] }
     return $null
 }
 
@@ -189,6 +195,8 @@ function Attach-OrionCameraWithRetry {
     for ($attempt = 1; $attempt -le $script:AttachRetryLimit; $attempt++) {
         $device = Get-OrionUsbDevice
         if ($null -ne $device -and $device.State -eq 'Attached') { return $true }
+        if ($null -eq $device) { throw 'Orion USB identity is missing. Reconnect only the camera and try again.' }
+        $BusId = $device.BusId
 
         if (-not (Start-OrionBridgeKeepAlive)) {
             $lastMessage = 'Ubuntu camera environment could not stay running.'
@@ -285,6 +293,8 @@ function Stop-OrionBridgeKeepAlive {
 function Start-OrionPreviewAttempt {
     param([ValidateSet('on', 'off')][string]$Crosshair)
 
+    $null = Repair-OrionPreviewDisplay -Distro $script:Distro -CameraScript $script:CameraScriptWsl
+
     $startInfo = New-Object System.Diagnostics.ProcessStartInfo
     $startInfo.FileName = 'wsl.exe'
     $startInfo.Arguments = "-d $($script:DistroArgument) -u root -- bash `"$($script:CameraScriptWsl)`" preview $Crosshair"
@@ -333,7 +343,14 @@ function Refresh-ExposureState {
 }
 
 function Connect-OrionCamera {
+    param([switch]$Recover)
+    if ($script:ConnectingCamera) { return $false }
+    $script:ConnectingCamera = $true
     try {
+        Update-UiState
+        if ($Recover -and (Test-ProcessRunning $script:RecordingProcess)) {
+            throw 'Stop the recording before reconnecting the camera.'
+        }
         Set-Status 'Starting the camera bridge...' 'busy'
         if (-not (Start-OrionBridgeKeepAlive)) {
             throw 'Ubuntu camera environment could not stay running.'
@@ -349,6 +366,26 @@ function Connect-OrionCamera {
             $admin = Start-Process -FilePath $script:Usbipd -ArgumentList @('bind', '--busid', $device.BusId) -Verb RunAs -Wait -PassThru
             if ($admin.ExitCode -ne 0) { throw 'Windows did not approve sharing the Orion camera.' }
             $device = Get-OrionUsbDevice
+        }
+
+        if ($Recover) {
+            Set-Status 'Stopping preview and reconnecting the Orion camera...' 'busy'
+            $null = Invoke-OrionCommand -CameraArguments @('stop-preview')
+            if ($null -ne $script:PreviewProcess) {
+                if (-not $script:PreviewProcess.WaitForExit(5000)) {
+                    throw 'Preview is still stopping. Wait a moment and try Recover again.'
+                }
+                $script:PreviewProcess.Dispose()
+                $script:PreviewProcess = $null
+            }
+            $previewButton.Text = 'Live Preview'
+            $previewButton.BackColor = $surfaceRaised
+            $null = Repair-OrionPreviewDisplay -Distro $script:Distro -CameraScript $script:CameraScriptWsl
+            if (-not (Reset-OrionAttachment)) {
+                throw 'Camera reconnect failed. Check the USB lead, then try Recover again.'
+            }
+            $device = Get-OrionUsbDevice
+            if ($null -eq $device) { throw 'Orion USB identity is missing. Unplug only the camera, wait ten seconds, then reconnect it.' }
         }
 
         if ($device.State -ne 'Attached') {
@@ -372,6 +409,10 @@ function Connect-OrionCamera {
         Update-UiState
         return $false
     }
+    finally {
+        $script:ConnectingCamera = $false
+        Update-UiState
+    }
 }
 
 function Reset-OrionAttachment {
@@ -380,6 +421,7 @@ function Reset-OrionAttachment {
         if ($null -eq $device) { return $false }
         if ($device.State -eq 'Attached') {
             & $script:Usbipd detach --busid $device.BusId 2>$null | Out-Null
+            if ($LASTEXITCODE -ne 0) { throw 'Orion camera detach failed.' }
             Start-Sleep -Milliseconds 700
         }
         if (-not (Start-OrionBridgeKeepAlive)) { return $false }
@@ -449,8 +491,8 @@ function Update-RecordingEstimate {
 function Update-UiState {
     $previewRunning = Test-ProcessRunning $script:PreviewProcess
     $recordingRunning = Test-ProcessRunning $script:RecordingProcess
-    $connectButton.Enabled = -not $previewRunning -and -not $recordingRunning
-    $previewButton.Enabled = -not $recordingRunning
+    $connectButton.Enabled = -not $recordingRunning -and -not $script:ConnectingCamera
+    $previewButton.Enabled = -not $recordingRunning -and -not $script:ConnectingCamera
     $snapshotButton.Enabled = -not $previewRunning -and -not $recordingRunning
     $recordButton.Enabled = -not $previewRunning
     $durationBox.Enabled = -not $recordingRunning
@@ -710,7 +752,7 @@ function Test-DeckLayout {
     }
 }
 
-$connectButton.Add_Click({ Connect-OrionCamera | Out-Null })
+$connectButton.Add_Click({ Connect-OrionCamera -Recover | Out-Null })
 
 $previewButton.Add_Click({
     if (Test-ProcessRunning $script:PreviewProcess) {

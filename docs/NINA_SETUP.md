@@ -7,8 +7,8 @@ does not need to run N.I.N.A. There is no COM registration or replacement of
 the existing panel. This is an experimental adapter, not a certified ASCOM
 driver or a verified N.I.N.A. compatibility release.
 
-For the saved camera checkpoint, exposure-response findings and ordered next
-steps, see the [18 October handover](HANDOVER_2026-10-18.md).
+For the current focused-camera checkpoint, repairs, exposure-response findings
+and ordered next steps, see the [N.I.N.A. handover](NINA_HANDOVER.md).
 
 ## Current limits
 

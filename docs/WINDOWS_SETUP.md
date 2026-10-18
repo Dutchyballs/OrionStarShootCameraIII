@@ -52,4 +52,8 @@ The expected sensor format is **BA81 / BGGR8**. A successful USB attachment alon
 
 ## Recovery
 
+See [preview and desktop recovery](PREVIEW_RECOVERY.md) for the desktop shortcut
+installer, safe restart launcher and the WSLg invisible-window fix. A graphics
+repair can close other Linux GUI windows; it does not reset the USB hub or WSL VM.
+
 Close capture/preview first. Use Connect / Recover Camera, check `usbipd list`, and confirm the selected distro and driver. If a kernel update broke capture, restore your backed-up kernel/module paths and restart WSL after saving work. Do not install unrelated legacy Windows drivers over a working USB bridge.

@@ -4,6 +4,10 @@ This separates recorded hardware results from the source-cleanup checks. Nothing
 
 ## Windows / WSL: fresh setup, 18 October 2026
 
+Later that day, a WSLg shared-memory rendering failure was diagnosed and
+repaired without resetting the USB camera or WSL VM. Jason confirmed the
+preview was visible and focused. See [preview recovery](PREVIEW_RECOVERY.md).
+
 Ubuntu 24.04.5 was installed under WSL 2.7.13 on Windows 11 x64, with
 usbipd-win 5.3.0. A fresh kernel and full matching module tree were built from
 the recorded source/configuration and activated as

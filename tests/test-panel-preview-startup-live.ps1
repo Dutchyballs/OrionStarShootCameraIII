@@ -15,17 +15,27 @@ try {
     for ($cycle = 1; $cycle -le 2; $cycle++) {
         Write-Output "PANEL_PREVIEW_CYCLE=$cycle START"
         $process = Start-OrionPreviewAttempt -Crosshair 'on'
+        $script:PreviewProcess = $process
         if (-not (Test-ProcessRunning $process)) {
             throw "Preview cycle $cycle did not stay alive through the startup guard."
         }
         Write-Output "PANEL_PREVIEW_CYCLE=$cycle VERIFIED_OPEN"
 
-        $null = Invoke-OrionCommand -CameraArguments @('stop-preview') -IgnoreError
-        if (-not $process.WaitForExit(10000)) {
-            throw "Preview cycle $cycle did not exit cleanly."
+        if ($cycle -eq 1) {
+            if (-not (Connect-OrionCamera -Recover)) {
+                throw 'Recover could not stop a running preview and reconnect the camera.'
+            }
+            if (Test-ProcessRunning $script:PreviewProcess) { throw 'Recover left the preview running.' }
+            Write-Output 'PANEL_RECOVER_FROM_PREVIEW_OK'
         }
-        try { $process.Dispose() } catch { }
-        $script:PreviewProcess = $null
+        else {
+            $null = Invoke-OrionCommand -CameraArguments @('stop-preview') -IgnoreError
+            if (-not $process.WaitForExit(10000)) {
+                throw "Preview cycle $cycle did not exit cleanly."
+            }
+            try { $process.Dispose() } catch { }
+            $script:PreviewProcess = $null
+        }
         Write-Output "PANEL_PREVIEW_CYCLE=$cycle CLOSED"
     }
 
